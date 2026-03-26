@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
-import { Vestaboard } from '@/components/Vestaboard';
+import { Vestaboard, type BoardTheme } from '@/components/Vestaboard';
 
 const COLORS = [
   { emoji: '🟥', name: 'Red' },
@@ -56,6 +56,7 @@ export default function Home() {
   const [message, setMessage] = useState(formatMessage("HELLO WORLD\n\nWELCOME TO THE\nRETRO SPLIT FLAP\nDISPLAY!\n\nTYPE BELOW..."));
   const [inputValue, setInputValue] = useState("");
   const [showControls, setShowControls] = useState(true);
+  const [boardTheme, setBoardTheme] = useState<BoardTheme>('dark-grey');
   const hideTimeout = useRef<NodeJS.Timeout | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -109,7 +110,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[#0a0a0a] overflow-hidden relative">
       <div className="absolute inset-0 p-2 sm:p-4 md:p-8 flex items-center justify-center">
-        <Vestaboard message={message} />
+        <Vestaboard message={message} theme={boardTheme} />
       </div>
 
       {/* Controls Overlay */}
@@ -138,9 +139,34 @@ export default function Home() {
             </div>
             
             <div className="flex justify-between items-center px-1">
-              <p className="text-xs text-zinc-500 font-medium">
-                Supports 6 lines • 22 chars per line
-              </p>
+              <div className="flex items-center gap-3">
+                <p className="text-xs text-zinc-500 font-medium hidden sm:block">
+                  Supports 6 lines • 22 chars per line
+                </p>
+                <div className="flex items-center gap-2 sm:border-l sm:border-zinc-700 sm:pl-3">
+                  <span className="text-xs text-zinc-500 font-medium">Frame:</span>
+                  <div className="flex gap-1.5">
+                    <button 
+                      type="button"
+                      onClick={() => setBoardTheme('dark-grey')} 
+                      className={`w-5 h-5 rounded-full bg-[#161616] border-2 transition-colors ${boardTheme === 'dark-grey' ? 'border-white' : 'border-zinc-700 hover:border-zinc-500'}`} 
+                      title="Dark Grey"
+                    />
+                    <button 
+                      type="button"
+                      onClick={() => setBoardTheme('wood')} 
+                      className={`w-5 h-5 rounded-full bg-[#2a1610] border-2 transition-colors ${boardTheme === 'wood' ? 'border-white' : 'border-zinc-700 hover:border-zinc-500'}`} 
+                      title="Dark Wood"
+                    />
+                    <button 
+                      type="button"
+                      onClick={() => setBoardTheme('metal')} 
+                      className={`w-5 h-5 rounded-full bg-[#4a4c50] border-2 transition-colors ${boardTheme === 'metal' ? 'border-white' : 'border-zinc-700 hover:border-zinc-500'}`} 
+                      title="Brushed Metal"
+                    />
+                  </div>
+                </div>
+              </div>
               <div className={`text-xs font-mono bg-black/30 px-2 py-1 rounded-md transition-colors ${
                 Array.from(inputValue).length >= 132 ? 'text-red-400 font-bold' : 
                 Array.from(inputValue).length >= 110 ? 'text-yellow-400' : 

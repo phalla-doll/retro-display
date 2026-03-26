@@ -13,7 +13,30 @@ const BOARD_WIDTH = 1816;
 // 6 rows * 96px + 5 gaps * 8px + 2 padding * 24px + 2 border * 8px = 680px
 const BOARD_HEIGHT = 680;
 
-export function Vestaboard({ message }: { message: string }) {
+export type BoardTheme = 'dark-grey' | 'wood' | 'metal';
+
+const THEMES = {
+  'dark-grey': {
+    bg: 'bg-[#161616]',
+    border: 'border-t-[#2a2a2a] border-x-[#1a1a1a] border-b-[#0a0a0a]',
+    texture: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")',
+    opacity: 'opacity-[0.15]'
+  },
+  'wood': {
+    bg: 'bg-[#2a1610]',
+    border: 'border-t-[#3d231a] border-x-[#20100b] border-b-[#100704]',
+    texture: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")',
+    opacity: 'opacity-[0.25]'
+  },
+  'metal': {
+    bg: 'bg-[#4a4c50]',
+    border: 'border-t-[#6b6d72] border-x-[#3f4145] border-b-[#252629]',
+    texture: 'repeating-linear-gradient(90deg, rgba(255,255,255,0.04) 0px, rgba(255,255,255,0.04) 1px, transparent 1px, transparent 4px), url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")',
+    opacity: 'opacity-[0.35]'
+  }
+};
+
+export function Vestaboard({ message, theme = 'dark-grey' }: { message: string, theme?: BoardTheme }) {
   // Pad or truncate message to exactly TOTAL_FLAPS
   // We need to handle emojis correctly, so we use Array.from to count characters properly
   const chars = Array.from(message);
@@ -67,6 +90,8 @@ export function Vestaboard({ message }: { message: string }) {
     return () => observer.disconnect();
   }, []);
 
+  const currentTheme = THEMES[theme];
+
   return (
     <div ref={containerRef} className="w-full h-full flex items-center justify-center">
       <div 
@@ -75,14 +100,14 @@ export function Vestaboard({ message }: { message: string }) {
           height: BOARD_HEIGHT, 
           transform: `scale(${scale})`,
           opacity: isReady ? 1 : 0,
-          transition: 'opacity 0.3s ease'
+          transition: 'opacity 0.3s ease, background-color 0.5s ease, border-color 0.5s ease'
         }}
-        className="bg-[#161616] p-6 rounded-[2rem] border-[8px] border-t-[#2a2a2a] border-x-[#1a1a1a] border-b-[#0a0a0a] shadow-[0_40px_80px_rgba(0,0,0,0.95),0_0_0_2px_rgba(0,0,0,1)] relative flex flex-col gap-2 origin-center shrink-0"
+        className={`${currentTheme.bg} p-6 rounded-[2rem] border-[8px] ${currentTheme.border} shadow-[0_40px_80px_rgba(0,0,0,0.95),0_0_0_2px_rgba(0,0,0,1)] relative flex flex-col gap-2 origin-center shrink-0 transition-colors duration-500`}
       >
         {/* Hardware Texture Overlay (covers the entire board including border) */}
         <div 
-          className="absolute -inset-[8px] rounded-[2rem] opacity-[0.15] pointer-events-none mix-blend-overlay" 
-          style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")' }}
+          className={`absolute -inset-[8px] rounded-[2rem] ${currentTheme.opacity} pointer-events-none mix-blend-overlay transition-opacity duration-500`} 
+          style={{ backgroundImage: currentTheme.texture }}
         ></div>
         
         {/* Outer Bezel Highlight (Rim light on the border) */}
