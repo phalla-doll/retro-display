@@ -2,7 +2,9 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
+import { Volume2, VolumeX } from 'lucide-react';
 import { Vestaboard, type BoardTheme, type BackgroundTheme } from '@/components/Vestaboard';
+import { soundEngine } from '@/lib/audio';
 
 const COLORS = [
   { emoji: '🟥', name: 'Red' },
@@ -58,8 +60,15 @@ export default function Home() {
   const [showControls, setShowControls] = useState(true);
   const [boardTheme, setBoardTheme] = useState<BoardTheme>('dark-grey');
   const [backgroundTheme, setBackgroundTheme] = useState<BackgroundTheme>('dark-grey');
+  const [soundEnabled, setSoundEnabled] = useState(false);
   const hideTimeout = useRef<NodeJS.Timeout | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const toggleSound = () => {
+    const newState = !soundEnabled;
+    setSoundEnabled(newState);
+    soundEngine?.setEnabled(newState);
+  };
 
   // Auto-hide controls after inactivity
   useEffect(() => {
@@ -189,6 +198,16 @@ export default function Home() {
                       title="Brushed Metal"
                     />
                   </div>
+                </div>
+                <div className="flex items-center gap-2 border-l border-zinc-700 pl-3">
+                  <button 
+                    type="button"
+                    onClick={toggleSound}
+                    className={`p-1 rounded-md transition-colors ${soundEnabled ? 'bg-white/10 text-white' : 'text-zinc-500 hover:text-zinc-300'}`}
+                    title={soundEnabled ? "Mute Sound" : "Enable Sound"}
+                  >
+                    {soundEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
+                  </button>
                 </div>
               </div>
               <div className={`text-xs font-mono bg-black/30 px-2 py-1 rounded-md transition-colors ${

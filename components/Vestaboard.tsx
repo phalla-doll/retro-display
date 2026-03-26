@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { Flap } from './Flap';
+import { soundEngine } from '@/lib/audio';
 
 const ROWS = 6;
 const COLS = 22;
@@ -86,6 +87,7 @@ export function Vestaboard({ message, theme = 'dark-grey', backgroundTheme = 'da
   useEffect(() => {
     if (!isReady) return; // Don't animate on initial load
     setIsAnimating(true);
+    soundEngine?.playUpdate();
     const timeout = setTimeout(() => setIsAnimating(false), 150);
     return () => clearTimeout(timeout);
   }, [message, isReady]);

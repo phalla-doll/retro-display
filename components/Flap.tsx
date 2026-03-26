@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { CHARACTERS, getFlapColors, findCharIndex, type FlapColors } from '@/lib/vestaboard';
+import { soundEngine } from '@/lib/audio';
 
 interface HalfPieceProps {
   char: string;
@@ -71,6 +72,7 @@ export function Flap({ targetChar }: { targetChar: string }) {
 
     const timeout = setTimeout(() => {
       setCurrentIndex((prev) => (prev + 1) % CHARACTERS.length);
+      soundEngine?.playFlap();
     }, speed);
 
     return () => clearTimeout(timeout);
