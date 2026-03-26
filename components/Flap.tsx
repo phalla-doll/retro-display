@@ -10,39 +10,8 @@ const CHARACTERS = [
   '🟥', '🟧', '🟨', '🟩', '🟦', '🟪', '⬜'
 ];
 
-export function Flap({ targetChar }: { targetChar: string }) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  
-  // Find target index, default to space if not found
-  let targetIndex = CHARACTERS.indexOf(targetChar.toUpperCase());
-  if (targetIndex === -1) {
-    // Check if it's a color emoji that might have variation selectors
-    const colorMatch = CHARACTERS.findIndex(c => c.startsWith(targetChar[0]));
-    if (colorMatch !== -1) {
-      targetIndex = colorMatch;
-    } else {
-      targetIndex = 0;
-    }
-  }
-
-  useEffect(() => {
-    if (currentIndex === targetIndex) return;
-
-    // Randomize the flip speed slightly for a more mechanical feel
-    // Real split flaps take a moment to cycle through
-    const speed = 25 + Math.random() * 15;
-
-    const timeout = setTimeout(() => {
-      setCurrentIndex((prev) => (prev + 1) % CHARACTERS.length);
-    }, speed);
-
-    return () => clearTimeout(timeout);
-  }, [currentIndex, targetIndex]);
-
-  const char = CHARACTERS[currentIndex];
-  
+function getColors(char: string) {
   const isColor = ['🟥', '🟧', '🟨', '🟩', '🟦', '🟪', '⬜'].includes(char);
-  
   let bgColor = '#111';
   let topBg = '#1a1a1a';
   let bottomBg = '#151515';
@@ -59,34 +28,136 @@ export function Flap({ targetChar }: { targetChar: string }) {
       case '⬜': bgColor = '#f4f4f5'; topBg = '#ffffff'; bottomBg = '#e4e4e7'; textColor = 'text-black'; break;
     }
   }
+  return { bgColor, topBg, bottomBg, textColor, isColor };
+}
+
+function HalfPiece({ char, colors, position, isFlipping, speed }: any) {
+  const isTop = position === 'top';
+  
+  let animationStyle: any = {};
+  if (isFlipping === 'top') {
+    animationStyle = {
+      animation: `flipTopFull ${speed}ms linear forwards`,
+      transformOrigin: 'bottom',
+      transformStyle: 'preserve-3d',
+      backfaceVisibility: 'hidden',
+      WebkitBackfaceVisibility: 'hidden',
+      zIndex: 10,
+    };
+  } else if (isFlipping === 'bottom') {
+    animationStyle = {
+      animation: `flipBottomFull ${speed}ms linear forwards`,
+      transformOrigin: 'top',
+      transformStyle: 'preserve-3d',
+      backfaceVisibility: 'hidden',
+      WebkitBackfaceVisibility: 'hidden',
+      zIndex: 10,
+    };
+  }
 
   return (
     <div 
-      className={`relative flex-1 aspect-[3/4] flex items-center justify-center text-[clamp(12px,2.5vw,48px)] font-bold font-sans rounded-[2px] sm:rounded-sm overflow-hidden border border-black/40 shadow-sm transition-colors duration-75 ${textColor}`}
-      style={{ backgroundColor: bgColor }}
+      className={`absolute left-0 right-0 overflow-hidden flex justify-center ${colors.textColor} ${
+        isTop ? 'top-0 bottom-1/2 items-end pb-[1%]' : 'top-1/2 bottom-0 items-start pt-[1%]'
+      }`}
+      style={{ 
+        backgroundColor: isTop ? colors.topBg : colors.bottomBg,
+        ...animationStyle
+      }}
     >
-      {/* Top half */}
-      <div 
-        className="absolute top-0 left-0 right-0 bottom-1/2 overflow-hidden flex items-end justify-center pb-[1%] transition-colors duration-75"
-        style={{ backgroundColor: topBg }}
-      >
-        {!isColor && <span className="translate-y-[50%] leading-none">{char}</span>}
-      </div>
-      {/* Bottom half */}
-      <div 
-        className="absolute top-1/2 left-0 right-0 bottom-0 overflow-hidden flex items-start justify-center pt-[1%] transition-colors duration-75"
-        style={{ backgroundColor: bottomBg }}
-      >
-        {!isColor && <span className="-translate-y-[50%] leading-none">{char}</span>}
-      </div>
+      {!colors.isColor && (
+        <span className={`leading-none font-bold font-sans text-[clamp(12px,2.5vw,48px)] ${isTop ? 'translate-y-[50%]' : '-translate-y-[50%]'}`}>
+          {char}
+        </span>
+      )}
+    </div>
+  );
+}
+
+export function Flap({ targetChar }: { targetChar: string }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isFlipping, setIsFlipping] = useState(false);
+  const [speed] = useState(() => 60 + Math.random() * 40); // 60-100ms per flap
+  
+  // Find target index, default to space if not found
+  let targetIndex = CHARACTERS.indexOf(targetChar.toUpperCase());
+  if (targetIndex === -1) {
+    // Check if it's a color emoji that might have variation selectors
+    const colorMatch = CHARACTERS.findIndex(c => c.startsWith(targetChar[0]));
+    if (colorMatch !== -1) {
+      targetIndex = colorMatch;
+    } else {
+      targetIndex = 0;
+    }
+  }
+
+  useEffect(() => {
+    if (currentIndex === targetIndex) {
+      setIsFlipping(false);
+      return;
+    }
+
+    setIsFlipping(true);
+
+    const timeout = setTimeout(() => {
+      setCurrentIndex((prev) => (prev + 1) % CHARACTERS.length);
+    }, speed);
+
+    return () => clearTimeout(timeout);
+  }, [currentIndex, targetIndex, speed]);
+
+  const char = CHARACTERS[currentIndex];
+  const nextChar = CHARACTERS[(currentIndex + 1) % CHARACTERS.length];
+  
+  const currentColors = getColors(char);
+  const nextColors = getColors(nextChar);
+
+  const staticTopChar = isFlipping ? nextChar : char;
+  const staticTopColors = isFlipping ? nextColors : currentColors;
+
+  return (
+    <div 
+      className="relative flex-1 aspect-[3/4] rounded-[2px] sm:rounded-sm overflow-hidden border border-black/40 shadow-sm"
+      style={{ backgroundColor: currentColors.bgColor, perspective: '800px' }}
+    >
+      {/* Static Top */}
+      <HalfPiece char={staticTopChar} colors={staticTopColors} position="top" />
+      
+      {/* Static Bottom */}
+      <HalfPiece char={char} colors={currentColors} position="bottom" />
+
+      {/* Flipping Top (Current Char) */}
+      {isFlipping && (
+        <HalfPiece 
+          key={`flip-top-${currentIndex}`}
+          char={char} 
+          colors={currentColors} 
+          position="top" 
+          isFlipping="top"
+          speed={speed}
+        />
+      )}
+
+      {/* Flipping Bottom (Next Char) */}
+      {isFlipping && (
+        <HalfPiece 
+          key={`flip-bottom-${currentIndex}`}
+          char={nextChar} 
+          colors={nextColors} 
+          position="bottom" 
+          isFlipping="bottom"
+          speed={speed}
+        />
+      )}
+
       {/* Center hinge */}
-      <div className="absolute top-1/2 left-0 right-0 h-[1px] sm:h-[2px] bg-black/80 -translate-y-1/2 z-10 shadow-[0_1px_2px_rgba(0,0,0,0.5)]"></div>
+      <div className="absolute top-1/2 left-0 right-0 h-[1px] sm:h-[2px] bg-black/80 -translate-y-1/2 z-20 shadow-[0_1px_2px_rgba(0,0,0,0.5)]"></div>
       
       {/* Overlay gradient for depth */}
-      <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent pointer-events-none"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent pointer-events-none z-30"></div>
       
       {/* Inner shadow for physical depth */}
-      <div className="absolute inset-0 shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] pointer-events-none"></div>
+      <div className="absolute inset-0 shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] pointer-events-none z-30"></div>
     </div>
   );
 }

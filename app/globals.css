@@ -1,1 +1,11 @@
 @import "tailwindcss";
+
+@keyframes flipTopFull {
+  0% { transform: rotateX(0deg); }
+  100% { transform: rotateX(-180deg); }
+}
+
+@keyframes flipBottomFull {
+  0% { transform: rotateX(180deg); }
+  100% { transform: rotateX(0deg); }
+}
