@@ -66,7 +66,7 @@ function HalfPiece({ char, colors, position, isFlipping, speed }: any) {
       }}
     >
       {!colors.isColor && (
-        <span className={`leading-none font-bold font-sans text-[clamp(12px,2.5vw,48px)] ${isTop ? 'translate-y-[50%]' : '-translate-y-[50%]'}`}>
+        <span className={`leading-none font-bold font-sans text-[52px] ${isTop ? 'translate-y-[50%]' : '-translate-y-[50%]'}`}>
           {char}
         </span>
       )}
@@ -117,7 +117,7 @@ export function Flap({ targetChar }: { targetChar: string }) {
 
   return (
     <div 
-      className="relative flex-1 aspect-[3/4] rounded-[2px] sm:rounded-sm overflow-hidden border border-black/40 shadow-sm"
+      className="relative w-[72px] h-[96px] rounded-md overflow-hidden border border-black/40 shadow-sm shrink-0"
       style={{ backgroundColor: currentColors.bgColor, perspective: '800px' }}
     >
       {/* Static Top */}
@@ -151,7 +151,7 @@ export function Flap({ targetChar }: { targetChar: string }) {
       )}
 
       {/* Center hinge */}
-      <div className="absolute top-1/2 left-0 right-0 h-[1px] sm:h-[2px] bg-black/80 -translate-y-1/2 z-20 shadow-[0_1px_2px_rgba(0,0,0,0.5)]"></div>
+      <div className="absolute top-1/2 left-0 right-0 h-[2px] bg-black/80 -translate-y-1/2 z-20 shadow-[0_1px_2px_rgba(0,0,0,0.5)]"></div>
       
       {/* Overlay gradient for depth */}
       <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent pointer-events-none z-30"></div>

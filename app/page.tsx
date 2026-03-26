@@ -106,8 +106,8 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-[#0a0a0a] flex flex-col items-center justify-center p-2 sm:p-4 md:p-8 overflow-hidden relative">
-      <div className="w-full max-w-[1800px] flex-1 flex flex-col justify-center">
+    <main className="min-h-screen bg-[#0a0a0a] overflow-hidden relative">
+      <div className="absolute inset-0 p-2 sm:p-4 md:p-8 flex items-center justify-center">
         <Vestaboard message={message} />
       </div>
 
