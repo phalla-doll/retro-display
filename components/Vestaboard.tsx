@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { motion } from 'motion/react';
 import { Flap } from './Flap';
 
 const ROWS = 6;
@@ -80,6 +81,14 @@ export function Vestaboard({ message, theme = 'dark-grey', backgroundTheme = 'da
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
   const [isReady, setIsReady] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  useEffect(() => {
+    if (!isReady) return; // Don't animate on initial load
+    setIsAnimating(true);
+    const timeout = setTimeout(() => setIsAnimating(false), 150);
+    return () => clearTimeout(timeout);
+  }, [message, isReady]);
 
   useEffect(() => {
     const observer = new ResizeObserver((entries) => {
@@ -114,13 +123,18 @@ export function Vestaboard({ message, theme = 'dark-grey', backgroundTheme = 'da
 
   return (
     <div ref={containerRef} className="w-full h-full flex items-center justify-center">
-      <div 
+      <motion.div 
+        animate={{ 
+          scale: isAnimating ? scale * 1.01 : scale,
+          opacity: isReady ? 1 : 0
+        }}
+        transition={{ 
+          scale: { type: "spring", stiffness: 400, damping: 25 },
+          opacity: { duration: 0.3 }
+        }}
         style={{ 
           width: BOARD_WIDTH, 
           height: BOARD_HEIGHT, 
-          transform: `scale(${scale})`,
-          opacity: isReady ? 1 : 0,
-          transition: 'opacity 0.3s ease, background-color 0.5s ease, border-color 0.5s ease'
         }}
         className={`${currentTheme.bg} p-6 rounded-[2rem] border-[8px] ${currentTheme.border} shadow-[0_40px_80px_rgba(0,0,0,0.95),0_0_0_2px_rgba(0,0,0,1)] relative flex flex-col gap-2 origin-center shrink-0 transition-colors duration-500`}
       >
@@ -156,7 +170,7 @@ export function Vestaboard({ message, theme = 'dark-grey', backgroundTheme = 'da
             </div>
           ))}
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
