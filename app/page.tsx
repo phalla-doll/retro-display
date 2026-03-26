@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { motion } from 'motion/react';
 import { Vestaboard } from '@/components/Vestaboard';
 
 const COLORS = [
@@ -112,8 +113,15 @@ export default function Home() {
       </div>
 
       {/* Controls Overlay */}
-      <div 
-        className={`absolute bottom-0 left-0 right-0 p-4 sm:p-8 bg-gradient-to-t from-black via-black/90 to-transparent transition-opacity duration-700 flex justify-center ${showControls ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+      <motion.div 
+        initial={false}
+        animate={{ 
+          opacity: showControls ? 1 : 0,
+          y: showControls ? 0 : 20,
+          pointerEvents: showControls ? 'auto' : 'none'
+        }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="absolute bottom-0 left-0 right-0 p-4 sm:p-8 bg-gradient-to-t from-black via-black/90 to-transparent flex justify-center"
       >
         <form onSubmit={handleSubmit} className="w-full max-w-4xl flex flex-col gap-4 bg-zinc-900/90 backdrop-blur-xl p-5 sm:p-6 rounded-2xl border border-zinc-800 shadow-2xl pointer-events-auto">
           <div className="flex flex-col gap-2">
@@ -164,7 +172,7 @@ export default function Home() {
             </button>
           </div>
         </form>
-      </div>
+      </motion.div>
     </main>
   );
 }
