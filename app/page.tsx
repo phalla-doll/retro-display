@@ -115,47 +115,53 @@ export default function Home() {
       <div 
         className={`absolute bottom-0 left-0 right-0 p-4 sm:p-8 bg-gradient-to-t from-black via-black/90 to-transparent transition-opacity duration-700 flex justify-center ${showControls ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
       >
-        <form onSubmit={handleSubmit} className="w-full max-w-4xl flex flex-col gap-4 bg-zinc-900/95 backdrop-blur-xl p-4 sm:p-6 rounded-2xl border border-zinc-800 shadow-2xl pointer-events-auto">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="flex-1 relative">
+        <form onSubmit={handleSubmit} className="w-full max-w-4xl flex flex-col gap-4 bg-zinc-900/90 backdrop-blur-xl p-5 sm:p-6 rounded-2xl border border-zinc-800 shadow-2xl pointer-events-auto">
+          <div className="flex flex-col gap-2">
+            <div className="relative">
               <textarea
                 ref={textareaRef}
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Type a message... (Cmd/Ctrl + Enter to send)"
-                className="w-full bg-black/50 text-white px-4 py-3 rounded-xl border border-zinc-700 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 text-base sm:text-lg font-mono uppercase resize-none h-28 sm:h-32"
+                className="w-full bg-black/40 text-white px-4 py-3 sm:px-5 sm:py-4 rounded-xl border border-zinc-700/50 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 text-base sm:text-lg font-mono uppercase resize-none h-28 sm:h-32 transition-colors"
               />
-              <div className="absolute bottom-3 right-3 text-xs text-zinc-500 font-mono bg-black/50 px-2 py-1 rounded">
+            </div>
+            
+            <div className="flex justify-between items-center px-1">
+              <p className="text-xs text-zinc-500 font-medium">
+                Supports 6 lines • 22 chars per line
+              </p>
+              <div className="text-xs text-zinc-500 font-mono bg-black/30 px-2 py-1 rounded-md">
                 {Array.from(inputValue).length}/132
               </div>
             </div>
-            <div className="flex flex-col gap-2 justify-end">
-              <button 
-                type="submit"
-                className="bg-white text-black px-8 py-4 rounded-xl font-bold hover:bg-zinc-200 transition-colors uppercase tracking-wider h-14 sm:h-auto shadow-[0_0_15px_rgba(255,255,255,0.1)]"
-              >
-                Update Board
-              </button>
-              <p className="text-xs text-zinc-500 text-center hidden sm:block">
-                Supports 6 lines<br/>22 chars per line
-              </p>
-            </div>
           </div>
           
-          <div className="flex items-center gap-2 pt-2 border-t border-zinc-800/50 overflow-x-auto pb-1">
-            <span className="text-xs text-zinc-500 uppercase tracking-wider font-bold mr-2 whitespace-nowrap">Colors:</span>
-            {COLORS.map(c => (
-              <button
-                key={c.name}
-                type="button"
-                onClick={() => insertColor(c.emoji)}
-                className="w-8 h-8 sm:w-10 sm:h-10 shrink-0 rounded-md flex items-center justify-center hover:scale-110 transition-transform bg-black/30 border border-zinc-700/50 text-lg sm:text-xl"
-                title={c.name}
-              >
-                {c.emoji}
-              </button>
-            ))}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-4 border-t border-zinc-800/50">
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 w-full sm:w-auto">
+              <span className="text-xs text-zinc-500 uppercase tracking-wider font-bold mr-2 whitespace-nowrap">Colors:</span>
+              <div className="flex gap-1.5">
+                {COLORS.map(c => (
+                  <button
+                    key={c.name}
+                    type="button"
+                    onClick={() => insertColor(c.emoji)}
+                    className="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-lg flex items-center justify-center hover:scale-110 transition-transform bg-black/40 border border-zinc-700/50 text-lg sm:text-xl shadow-sm"
+                    title={c.name}
+                  >
+                    {c.emoji}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <button 
+              type="submit"
+              className="w-full sm:w-auto bg-white text-black px-8 py-3 rounded-xl font-bold hover:bg-zinc-200 transition-colors uppercase tracking-wider text-sm shadow-[0_0_15px_rgba(255,255,255,0.1)] shrink-0"
+            >
+              Update Board
+            </button>
           </div>
         </form>
       </div>
