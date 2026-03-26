@@ -131,6 +131,7 @@ export default function Home() {
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={handleKeyDown}
+                maxLength={132}
                 placeholder="Type a message... (Cmd/Ctrl + Enter to send)"
                 className="w-full bg-black/40 text-white px-4 py-3 sm:px-5 sm:py-4 rounded-xl border border-zinc-700/50 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 text-base sm:text-lg font-mono uppercase resize-none h-28 sm:h-32 transition-colors"
               />
@@ -140,7 +141,11 @@ export default function Home() {
               <p className="text-xs text-zinc-500 font-medium">
                 Supports 6 lines • 22 chars per line
               </p>
-              <div className="text-xs text-zinc-500 font-mono bg-black/30 px-2 py-1 rounded-md">
+              <div className={`text-xs font-mono bg-black/30 px-2 py-1 rounded-md transition-colors ${
+                Array.from(inputValue).length >= 132 ? 'text-red-400 font-bold' : 
+                Array.from(inputValue).length >= 110 ? 'text-yellow-400' : 
+                'text-zinc-500'
+              }`}>
                 {Array.from(inputValue).length}/132
               </div>
             </div>
