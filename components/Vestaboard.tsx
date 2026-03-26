@@ -20,19 +20,19 @@ export type BackgroundTheme = 'dark-grey' | 'wood' | 'metal';
 const THEMES = {
   'dark-grey': {
     bg: 'bg-[#161616]',
-    border: 'border-t-[#2a2a2a] border-x-[#1a1a1a] border-b-[#0a0a0a]',
+    border: 'border-[#1a1a1a]',
     texture: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")',
     opacity: 'opacity-[0.15]'
   },
   'wood': {
     bg: 'bg-[#2a1610]',
-    border: 'border-t-[#3d231a] border-x-[#20100b] border-b-[#100704]',
+    border: 'border-[#20100b]',
     texture: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22wood%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.01 0.15%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23wood)%22/%3E%3C/svg%3E")',
     opacity: 'opacity-[0.3]'
   },
   'metal': {
     bg: 'bg-[#4a4c50]',
-    border: 'border-t-[#6b6d72] border-x-[#3f4145] border-b-[#252629]',
+    border: 'border-[#3f4145]',
     texture: 'repeating-linear-gradient(90deg, rgba(255,255,255,0.04) 0px, rgba(255,255,255,0.04) 1px, transparent 1px, transparent 4px), url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")',
     opacity: 'opacity-[0.35]'
   }
@@ -138,6 +138,17 @@ export function Vestaboard({ message, theme = 'dark-grey', backgroundTheme = 'da
         }}
         className={`${currentTheme.bg} p-6 rounded-[2rem] border-[8px] ${currentTheme.border} shadow-[0_40px_80px_rgba(0,0,0,0.95),0_0_0_2px_rgba(0,0,0,1)] relative flex flex-col gap-2 origin-center shrink-0 transition-colors duration-500`}
       >
+        {/* Smooth 3D Border Lighting Overlay */}
+        <div 
+          className="absolute -inset-[8px] rounded-[2rem] border-[8px] border-transparent pointer-events-none mix-blend-overlay"
+          style={{
+            background: 'linear-gradient(to bottom, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 20%, rgba(0,0,0,0) 80%, rgba(0,0,0,0.8) 100%) border-box',
+            WebkitMask: 'linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)',
+            WebkitMaskComposite: 'xor',
+            maskComposite: 'exclude',
+          }}
+        ></div>
+
         {/* Hardware Texture Overlay (covers the entire board including border) */}
         <div 
           className={`absolute -inset-[8px] rounded-[2rem] ${currentTheme.opacity} pointer-events-none mix-blend-overlay transition-opacity duration-500`} 
