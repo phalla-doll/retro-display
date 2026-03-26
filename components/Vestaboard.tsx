@@ -14,6 +14,7 @@ const BOARD_WIDTH = 1816;
 const BOARD_HEIGHT = 680;
 
 export type BoardTheme = 'dark-grey' | 'wood' | 'metal';
+export type BackgroundTheme = 'dark-grey' | 'wood' | 'metal';
 
 const THEMES = {
   'dark-grey': {
@@ -36,7 +37,25 @@ const THEMES = {
   }
 };
 
-export function Vestaboard({ message, theme = 'dark-grey' }: { message: string, theme?: BoardTheme }) {
+const BACKGROUND_THEMES = {
+  'dark-grey': {
+    bg: 'bg-[#050505]',
+    texture: 'none',
+    opacity: 'opacity-0'
+  },
+  'wood': {
+    bg: 'bg-[#1a0b05]',
+    texture: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")',
+    opacity: 'opacity-[0.15]'
+  },
+  'metal': {
+    bg: 'bg-[#1a1c20]',
+    texture: 'repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 4px), url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")',
+    opacity: 'opacity-[0.2]'
+  }
+};
+
+export function Vestaboard({ message, theme = 'dark-grey', backgroundTheme = 'dark-grey' }: { message: string, theme?: BoardTheme, backgroundTheme?: BackgroundTheme }) {
   // Pad or truncate message to exactly TOTAL_FLAPS
   // We need to handle emojis correctly, so we use Array.from to count characters properly
   const chars = Array.from(message);
@@ -91,6 +110,7 @@ export function Vestaboard({ message, theme = 'dark-grey' }: { message: string, 
   }, []);
 
   const currentTheme = THEMES[theme];
+  const currentBgTheme = BACKGROUND_THEMES[backgroundTheme];
 
   return (
     <div ref={containerRef} className="w-full h-full flex items-center justify-center">
@@ -114,7 +134,13 @@ export function Vestaboard({ message, theme = 'dark-grey' }: { message: string, 
         <div className="absolute -inset-[8px] rounded-[2rem] border border-white/10 pointer-events-none"></div>
         
         {/* Inner Cavity (The recessed area where flaps sit) */}
-        <div className="absolute inset-0 rounded-[1.25rem] bg-[#050505] shadow-[inset_0_15px_40px_rgba(0,0,0,0.9),inset_0_2px_5px_rgba(0,0,0,0.8)] pointer-events-none"></div>
+        <div className={`absolute inset-0 rounded-[1.25rem] ${currentBgTheme.bg} shadow-[inset_0_15px_40px_rgba(0,0,0,0.9),inset_0_2px_5px_rgba(0,0,0,0.8)] pointer-events-none transition-colors duration-500`}>
+          {/* Inner Cavity Texture Overlay */}
+          <div 
+            className={`absolute inset-0 rounded-[1.25rem] ${currentBgTheme.opacity} pointer-events-none mix-blend-overlay transition-opacity duration-500`} 
+            style={{ backgroundImage: currentBgTheme.texture }}
+          ></div>
+        </div>
         
         {/* Inner Bezel Highlight (Edge of the cavity) */}
         <div className="absolute inset-0 rounded-[1.25rem] border border-black/90 pointer-events-none"></div>
