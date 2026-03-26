@@ -57,7 +57,17 @@ const BACKGROUND_THEMES = {
   }
 };
 
-export function Vestaboard({ message, theme = 'dark-grey', backgroundTheme = 'dark-grey' }: { message: string, theme?: BoardTheme, backgroundTheme?: BackgroundTheme }) {
+export function Vestaboard({ 
+  message, 
+  theme = 'dark-grey', 
+  backgroundTheme = 'dark-grey',
+  fontClass = 'font-sans'
+}: { 
+  message: string, 
+  theme?: BoardTheme, 
+  backgroundTheme?: BackgroundTheme,
+  fontClass?: string
+}) {
   // Pad or truncate message to exactly TOTAL_FLAPS
   // We need to handle emojis correctly, so we use Array.from to count characters properly
   const chars = Array.from(message);
@@ -178,7 +188,7 @@ export function Vestaboard({ message, theme = 'dark-grey', backgroundTheme = 'da
           {grid.map((row, rIndex) => (
             <div key={rIndex} className="flex gap-2">
               {row.map((char, cIndex) => (
-                <Flap key={`${rIndex}-${cIndex}`} targetChar={char} />
+                <Flap key={`${rIndex}-${cIndex}`} targetChar={char} fontClass={fontClass} />
               ))}
             </div>
           ))}

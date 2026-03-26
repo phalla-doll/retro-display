@@ -54,12 +54,19 @@ function formatMessage(input: string): string {
   return formattedChars.slice(0, 132).join('');
 }
 
+const FONTS = [
+  { name: 'Inter', class: 'font-[family-name:var(--font-inter)]' },
+  { name: 'Geist Mono', class: 'font-[family-name:var(--font-geist-mono)]' },
+  { name: 'Space Mono', class: 'font-[family-name:var(--font-space-mono)]' },
+];
+
 export default function Home() {
   const [message, setMessage] = useState(formatMessage("HELLO WORLD\n\nWELCOME TO THE\nRETRO SPLIT FLAP\nDISPLAY!\n\nTYPE BELOW..."));
   const [inputValue, setInputValue] = useState("");
   const [showControls, setShowControls] = useState(true);
   const [boardTheme, setBoardTheme] = useState<BoardTheme>('dark-grey');
   const [backgroundTheme, setBackgroundTheme] = useState<BackgroundTheme>('dark-grey');
+  const [fontClass, setFontClass] = useState(FONTS[0].class);
   const [soundEnabled, setSoundEnabled] = useState(false);
   const hideTimeout = useRef<NodeJS.Timeout | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -120,7 +127,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[#0a0a0a] overflow-hidden relative">
       <div className="absolute inset-0 p-2 sm:p-4 md:p-8 flex items-center justify-center">
-        <Vestaboard message={message} theme={boardTheme} backgroundTheme={backgroundTheme} />
+        <Vestaboard message={message} theme={boardTheme} backgroundTheme={backgroundTheme} fontClass={fontClass} />
       </div>
 
       {/* Controls Overlay */}
@@ -208,6 +215,18 @@ export default function Home() {
                   >
                     {soundEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
                   </button>
+                </div>
+                <div className="flex items-center gap-2 border-l border-zinc-700 pl-3">
+                  <span className="text-xs text-zinc-500 font-medium">Font:</span>
+                  <select 
+                    value={fontClass}
+                    onChange={(e) => setFontClass(e.target.value)}
+                    className="bg-black/40 text-white text-xs px-2 py-1 rounded border border-zinc-700/50 focus:outline-none focus:border-zinc-500"
+                  >
+                    {FONTS.map(font => (
+                      <option key={font.name} value={font.class}>{font.name}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
               <div className={`text-xs font-mono bg-black/30 px-2 py-1 rounded-md transition-colors ${

@@ -10,9 +10,10 @@ interface HalfPieceProps {
   position: 'top' | 'bottom';
   isFlipping?: 'top' | 'bottom';
   speed?: number;
+  fontClass?: string;
 }
 
-function HalfPiece({ char, colors, position, isFlipping, speed }: HalfPieceProps) {
+function HalfPiece({ char, colors, position, isFlipping, speed, fontClass = 'font-sans' }: HalfPieceProps) {
   const isTop = position === 'top';
   
   let animationStyle: any = {};
@@ -47,7 +48,7 @@ function HalfPiece({ char, colors, position, isFlipping, speed }: HalfPieceProps
       }}
     >
       {!colors.isColor && (
-        <span className={`leading-none font-bold font-sans text-[52px] ${isTop ? 'translate-y-[50%]' : '-translate-y-[50%]'}`}>
+        <span className={`leading-none font-bold ${fontClass} text-[52px] ${isTop ? 'translate-y-[50%]' : '-translate-y-[50%]'}`}>
           {char}
         </span>
       )}
@@ -55,7 +56,7 @@ function HalfPiece({ char, colors, position, isFlipping, speed }: HalfPieceProps
   );
 }
 
-export function Flap({ targetChar }: { targetChar: string }) {
+export function Flap({ targetChar, fontClass = 'font-sans' }: { targetChar: string, fontClass?: string }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipping, setIsFlipping] = useState(false);
   const [speed] = useState(() => 60 + Math.random() * 40); // 60-100ms per flap
@@ -93,10 +94,10 @@ export function Flap({ targetChar }: { targetChar: string }) {
       style={{ backgroundColor: currentColors.bgColor, perspective: '800px' }}
     >
       {/* Static Top */}
-      <HalfPiece char={staticTopChar} colors={staticTopColors} position="top" />
+      <HalfPiece char={staticTopChar} colors={staticTopColors} position="top" fontClass={fontClass} />
       
       {/* Static Bottom */}
-      <HalfPiece char={char} colors={currentColors} position="bottom" />
+      <HalfPiece char={char} colors={currentColors} position="bottom" fontClass={fontClass} />
 
       {/* Flipping Top (Current Char) */}
       {isFlipping && (
@@ -107,6 +108,7 @@ export function Flap({ targetChar }: { targetChar: string }) {
           position="top" 
           isFlipping="top"
           speed={speed}
+          fontClass={fontClass}
         />
       )}
 
@@ -119,6 +121,7 @@ export function Flap({ targetChar }: { targetChar: string }) {
           position="bottom" 
           isFlipping="bottom"
           speed={speed}
+          fontClass={fontClass}
         />
       )}
 
