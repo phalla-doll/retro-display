@@ -139,9 +139,9 @@ export default function Home() {
           </div>
           
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-4 border-t border-zinc-800/50">
-            <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 w-full sm:w-auto">
-              <span className="text-xs text-zinc-500 uppercase tracking-wider font-bold mr-2 whitespace-nowrap">Colors:</span>
-              <div className="flex gap-1.5">
+            <div className="flex items-center gap-2 overflow-x-auto overflow-y-hidden no-scrollbar py-2 -my-2 w-full sm:w-auto">
+              <span className="text-xs text-zinc-500 uppercase tracking-wider font-bold mr-2 whitespace-nowrap pl-1">Colors:</span>
+              <div className="flex gap-1.5 px-1">
                 {COLORS.map(c => (
                   <button
                     key={c.name}
