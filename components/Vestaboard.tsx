@@ -77,18 +77,34 @@ export function Vestaboard({ message }: { message: string }) {
           opacity: isReady ? 1 : 0,
           transition: 'opacity 0.3s ease'
         }}
-        className="bg-[#050505] p-6 rounded-2xl border-[8px] border-[#111] shadow-[0_20px_50px_rgba(0,0,0,0.8)] relative flex flex-col gap-2 origin-center shrink-0"
+        className="bg-[#161616] p-6 rounded-[2rem] border-[8px] border-t-[#2a2a2a] border-x-[#1a1a1a] border-b-[#0a0a0a] shadow-[0_40px_80px_rgba(0,0,0,0.95),0_0_0_2px_rgba(0,0,0,1)] relative flex flex-col gap-2 origin-center shrink-0"
       >
-        {/* Inner bezel */}
-        <div className="absolute inset-0 border border-white/5 rounded-xl pointer-events-none"></div>
+        {/* Hardware Texture Overlay (covers the entire board including border) */}
+        <div 
+          className="absolute -inset-[8px] rounded-[2rem] opacity-[0.15] pointer-events-none mix-blend-overlay" 
+          style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")' }}
+        ></div>
         
-        {grid.map((row, rIndex) => (
-          <div key={rIndex} className="flex gap-2">
-            {row.map((char, cIndex) => (
-              <Flap key={`${rIndex}-${cIndex}`} targetChar={char} />
-            ))}
-          </div>
-        ))}
+        {/* Outer Bezel Highlight (Rim light on the border) */}
+        <div className="absolute -inset-[8px] rounded-[2rem] border border-white/10 pointer-events-none"></div>
+        
+        {/* Inner Cavity (The recessed area where flaps sit) */}
+        <div className="absolute inset-0 rounded-[1.25rem] bg-[#050505] shadow-[inset_0_15px_40px_rgba(0,0,0,0.9),inset_0_2px_5px_rgba(0,0,0,0.8)] pointer-events-none"></div>
+        
+        {/* Inner Bezel Highlight (Edge of the cavity) */}
+        <div className="absolute inset-0 rounded-[1.25rem] border border-black/90 pointer-events-none"></div>
+        <div className="absolute inset-[1px] rounded-[1.15rem] border border-white/5 pointer-events-none"></div>
+        
+        {/* Flaps Grid */}
+        <div className="relative z-10 flex flex-col gap-2">
+          {grid.map((row, rIndex) => (
+            <div key={rIndex} className="flex gap-2">
+              {row.map((char, cIndex) => (
+                <Flap key={`${rIndex}-${cIndex}`} targetChar={char} />
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
