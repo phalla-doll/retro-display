@@ -221,10 +221,10 @@ export default function Home() {
                   <select 
                     value={fontClass}
                     onChange={(e) => setFontClass(e.target.value)}
-                    className="bg-black/40 text-white text-xs px-2 py-1 rounded border border-zinc-700/50 focus:outline-none focus:border-zinc-500"
+                    className="bg-[#161616] text-white text-xs px-3 py-1.5 rounded-md border border-zinc-700/50 hover:border-zinc-500 focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-500 transition-colors cursor-pointer shadow-sm"
                   >
                     {FONTS.map(font => (
-                      <option key={font.name} value={font.class}>{font.name}</option>
+                      <option key={font.name} value={font.class} className="bg-zinc-900 py-1">{font.name}</option>
                     ))}
                   </select>
                 </div>
