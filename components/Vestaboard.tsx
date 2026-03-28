@@ -61,12 +61,14 @@ export function Vestaboard({
   message, 
   theme = 'dark-grey', 
   backgroundTheme = 'dark-grey',
-  fontClass = 'font-sans'
+  fontClass = 'font-sans',
+  animatedBackground = false
 }: { 
   message: string, 
   theme?: BoardTheme, 
   backgroundTheme?: BackgroundTheme,
-  fontClass?: string
+  fontClass?: string,
+  animatedBackground?: boolean
 }) {
   // Pad or truncate message to exactly TOTAL_FLAPS
   // We need to handle emojis correctly, so we use Array.from to count characters properly
@@ -171,7 +173,17 @@ export function Vestaboard({
         <div className="absolute -inset-[8px] rounded-[2rem] border border-white/10 pointer-events-none"></div>
         
         {/* Inner Cavity (The recessed area where flaps sit) */}
-        <div className={`absolute inset-0 rounded-[1.25rem] ${currentBgTheme.bg} shadow-[inset_0_15px_40px_rgba(0,0,0,0.9),inset_0_2px_5px_rgba(0,0,0,0.8)] pointer-events-none transition-colors duration-500`}>
+        <div className={`absolute inset-0 rounded-[1.25rem] ${currentBgTheme.bg} shadow-[inset_0_15px_40px_rgba(0,0,0,0.9),inset_0_2px_5px_rgba(0,0,0,0.8)] pointer-events-none transition-colors duration-500 overflow-hidden`}>
+          
+          {/* Animated Background Overlays */}
+          {animatedBackground && backgroundTheme === 'wood' && (
+            <div className="absolute inset-0 opacity-20 mix-blend-overlay animate-pan-bg bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#ff8a00] via-[#4a2511] to-transparent pointer-events-none"></div>
+          )}
+          
+          {animatedBackground && backgroundTheme === 'metal' && (
+            <div className="absolute inset-0 opacity-20 mix-blend-overlay animate-pan-bg bg-[linear-gradient(45deg,_var(--tw-gradient-stops))] from-white/40 via-transparent to-white/40 pointer-events-none"></div>
+          )}
+
           {/* Inner Cavity Texture Overlay */}
           <div 
             className={`absolute inset-0 rounded-[1.25rem] ${currentBgTheme.opacity} pointer-events-none mix-blend-overlay transition-opacity duration-500`} 

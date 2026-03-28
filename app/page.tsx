@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
-import { Volume2, VolumeX } from 'lucide-react';
+import { Volume2, VolumeX, Sparkles } from 'lucide-react';
 import { Vestaboard, type BoardTheme, type BackgroundTheme } from '@/components/Vestaboard';
 import { soundEngine } from '@/lib/audio';
 
@@ -68,6 +68,7 @@ export default function Home() {
   const [backgroundTheme, setBackgroundTheme] = useState<BackgroundTheme>('dark-grey');
   const [fontClass, setFontClass] = useState(FONTS[0].class);
   const [soundEnabled, setSoundEnabled] = useState(false);
+  const [animatedBackground, setAnimatedBackground] = useState(true);
   const hideTimeout = useRef<NodeJS.Timeout | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -127,7 +128,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[#0a0a0a] overflow-hidden relative">
       <div className="absolute inset-0 p-2 sm:p-4 md:p-8 flex items-center justify-center">
-        <Vestaboard message={message} theme={boardTheme} backgroundTheme={backgroundTheme} fontClass={fontClass} />
+        <Vestaboard message={message} theme={boardTheme} backgroundTheme={backgroundTheme} fontClass={fontClass} animatedBackground={animatedBackground} />
       </div>
 
       {/* Controls Overlay */}
@@ -203,6 +204,16 @@ export default function Home() {
                 title={soundEnabled ? "Mute Sound" : "Enable Sound"}
               >
                 {soundEnabled ? <Volume2 size={14} /> : <VolumeX size={14} />}
+              </button>
+
+              {/* Animation Toggle */}
+              <button 
+                type="button"
+                onClick={() => setAnimatedBackground(!animatedBackground)}
+                className={`p-1 rounded-md transition-colors ${animatedBackground ? 'text-zinc-300 hover:text-white' : 'text-zinc-600 hover:text-zinc-400'}`}
+                title={animatedBackground ? "Disable Animated Background" : "Enable Animated Background"}
+              >
+                <Sparkles size={14} />
               </button>
             </div>
 
