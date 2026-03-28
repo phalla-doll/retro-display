@@ -139,130 +139,97 @@ export default function Home() {
           pointerEvents: showControls ? 'auto' : 'none'
         }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="absolute bottom-0 left-0 right-0 p-4 sm:p-8 bg-gradient-to-t from-black via-black/90 to-transparent flex justify-center"
+        className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 flex justify-center"
       >
-        <form onSubmit={handleSubmit} className="w-full max-w-4xl flex flex-col gap-4 bg-zinc-900/90 backdrop-blur-xl p-5 sm:p-6 rounded-2xl border border-zinc-800 shadow-2xl pointer-events-auto">
-          <div className="flex flex-col gap-2">
-            <div className="relative">
-              <textarea
-                ref={textareaRef}
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyDown={handleKeyDown}
-                maxLength={132}
-                placeholder="Type a message... (Cmd/Ctrl + Enter to send)"
-                className="w-full bg-black/40 text-white px-4 py-3 sm:px-5 sm:py-4 rounded-xl border border-zinc-700/50 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 text-base sm:text-lg font-mono uppercase resize-none h-28 sm:h-32 transition-colors"
-              />
-            </div>
-            
-            <div className="flex justify-between items-center px-1">
-              <div className="flex items-center gap-3">
-                <p className="text-xs text-zinc-500 font-medium hidden sm:block">
-                  Supports 6 lines • 22 chars per line
-                </p>
-                <div className="flex items-center gap-2 sm:border-l sm:border-zinc-700 sm:pl-3">
-                  <span className="text-xs text-zinc-500 font-medium">Frame:</span>
-                  <div className="flex gap-1.5">
-                    <button 
-                      type="button"
-                      onClick={() => setBoardTheme('dark-grey')} 
-                      className={`w-5 h-5 rounded-full bg-[#161616] border-2 transition-colors ${boardTheme === 'dark-grey' ? 'border-white' : 'border-zinc-700 hover:border-zinc-500'}`} 
-                      title="Dark Grey"
-                    />
-                    <button 
-                      type="button"
-                      onClick={() => setBoardTheme('wood')} 
-                      className={`w-5 h-5 rounded-full bg-[#2a1610] border-2 transition-colors ${boardTheme === 'wood' ? 'border-white' : 'border-zinc-700 hover:border-zinc-500'}`} 
-                      title="Dark Wood"
-                    />
-                    <button 
-                      type="button"
-                      onClick={() => setBoardTheme('metal')} 
-                      className={`w-5 h-5 rounded-full bg-[#4a4c50] border-2 transition-colors ${boardTheme === 'metal' ? 'border-white' : 'border-zinc-700 hover:border-zinc-500'}`} 
-                      title="Brushed Metal"
-                    />
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 border-l border-zinc-700 pl-3">
-                  <span className="text-xs text-zinc-500 font-medium">Background:</span>
-                  <div className="flex gap-1.5">
-                    <button 
-                      type="button"
-                      onClick={() => setBackgroundTheme('dark-grey')} 
-                      className={`w-5 h-5 rounded-full bg-[#050505] border-2 transition-colors ${backgroundTheme === 'dark-grey' ? 'border-white' : 'border-zinc-700 hover:border-zinc-500'}`} 
-                      title="Dark Grey"
-                    />
-                    <button 
-                      type="button"
-                      onClick={() => setBackgroundTheme('wood')} 
-                      className={`w-5 h-5 rounded-full bg-[#1a0b05] border-2 transition-colors ${backgroundTheme === 'wood' ? 'border-white' : 'border-zinc-700 hover:border-zinc-500'}`} 
-                      title="Dark Wood"
-                    />
-                    <button 
-                      type="button"
-                      onClick={() => setBackgroundTheme('metal')} 
-                      className={`w-5 h-5 rounded-full bg-[#1a1c20] border-2 transition-colors ${backgroundTheme === 'metal' ? 'border-white' : 'border-zinc-700 hover:border-zinc-500'}`} 
-                      title="Brushed Metal"
-                    />
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 border-l border-zinc-700 pl-3">
-                  <button 
-                    type="button"
-                    onClick={toggleSound}
-                    className={`p-1 rounded-md transition-colors ${soundEnabled ? 'bg-white/10 text-white' : 'text-zinc-500 hover:text-zinc-300'}`}
-                    title={soundEnabled ? "Mute Sound" : "Enable Sound"}
-                  >
-                    {soundEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
-                  </button>
-                </div>
-                <div className="flex items-center gap-2 border-l border-zinc-700 pl-3">
-                  <span className="text-xs text-zinc-500 font-medium">Font:</span>
-                  <select 
-                    value={fontClass}
-                    onChange={(e) => setFontClass(e.target.value)}
-                    className="bg-[#161616] text-white text-xs px-3 py-1.5 rounded-md border border-zinc-700/50 hover:border-zinc-500 focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-500 transition-colors cursor-pointer shadow-sm"
-                  >
-                    {FONTS.map(font => (
-                      <option key={font.name} value={font.class} className="bg-zinc-900 py-1">{font.name}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-              <div className={`text-xs font-mono bg-black/30 px-2 py-1 rounded-md transition-colors ${
-                Array.from(inputValue).length >= 132 ? 'text-red-400 font-bold' : 
-                Array.from(inputValue).length >= 110 ? 'text-yellow-400' : 
-                'text-zinc-500'
-              }`}>
-                {Array.from(inputValue).length}/132
-              </div>
+        <form onSubmit={handleSubmit} className="w-full max-w-3xl flex flex-col gap-3 bg-zinc-950/80 backdrop-blur-md p-4 rounded-2xl border border-zinc-800/60 shadow-2xl pointer-events-auto">
+          <div className="relative">
+            <textarea
+              ref={textareaRef}
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyDown={handleKeyDown}
+              maxLength={132}
+              placeholder="Type a message... (Cmd/Ctrl + Enter to send)"
+              className="w-full bg-transparent text-white px-3 py-2 rounded-xl border border-transparent focus:outline-none focus:border-zinc-700/50 focus:bg-zinc-900/50 text-sm sm:text-base font-mono uppercase resize-none h-20 sm:h-24 transition-all placeholder:text-zinc-600"
+            />
+            <div className={`absolute bottom-2 right-3 text-[10px] font-mono transition-colors ${
+              Array.from(inputValue).length >= 132 ? 'text-red-400 font-bold' : 
+              Array.from(inputValue).length >= 110 ? 'text-yellow-400' : 
+              'text-zinc-600'
+            }`}>
+              {Array.from(inputValue).length}/132
             </div>
           </div>
           
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-4 border-t border-zinc-800/50">
-            <div className="flex items-center gap-2 overflow-x-auto overflow-y-hidden no-scrollbar py-2 -my-2 w-full sm:w-auto">
-              <span className="text-xs text-zinc-500 uppercase tracking-wider font-bold mr-2 whitespace-nowrap pl-1">Colors:</span>
-              <div className="flex gap-1.5 px-1">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-2 border-t border-zinc-800/40">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+              {/* Theme Controls */}
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] text-zinc-500 uppercase tracking-wider font-semibold">Frame</span>
+                <div className="flex gap-1">
+                  <button type="button" onClick={() => setBoardTheme('dark-grey')} className={`w-4 h-4 rounded-full bg-[#161616] border transition-colors ${boardTheme === 'dark-grey' ? 'border-zinc-400' : 'border-zinc-700 hover:border-zinc-500'}`} title="Dark Grey" />
+                  <button type="button" onClick={() => setBoardTheme('wood')} className={`w-4 h-4 rounded-full bg-[#2a1610] border transition-colors ${boardTheme === 'wood' ? 'border-zinc-400' : 'border-zinc-700 hover:border-zinc-500'}`} title="Dark Wood" />
+                  <button type="button" onClick={() => setBoardTheme('metal')} className={`w-4 h-4 rounded-full bg-[#4a4c50] border transition-colors ${boardTheme === 'metal' ? 'border-zinc-400' : 'border-zinc-700 hover:border-zinc-500'}`} title="Brushed Metal" />
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] text-zinc-500 uppercase tracking-wider font-semibold">BG</span>
+                <div className="flex gap-1">
+                  <button type="button" onClick={() => setBackgroundTheme('dark-grey')} className={`w-4 h-4 rounded-full bg-[#050505] border transition-colors ${backgroundTheme === 'dark-grey' ? 'border-zinc-400' : 'border-zinc-700 hover:border-zinc-500'}`} title="Dark Grey" />
+                  <button type="button" onClick={() => setBackgroundTheme('wood')} className={`w-4 h-4 rounded-full bg-[#1a0b05] border transition-colors ${backgroundTheme === 'wood' ? 'border-zinc-400' : 'border-zinc-700 hover:border-zinc-500'}`} title="Dark Wood" />
+                  <button type="button" onClick={() => setBackgroundTheme('metal')} className={`w-4 h-4 rounded-full bg-[#1a1c20] border transition-colors ${backgroundTheme === 'metal' ? 'border-zinc-400' : 'border-zinc-700 hover:border-zinc-500'}`} title="Brushed Metal" />
+                </div>
+              </div>
+
+              {/* Font Selector */}
+              <div className="flex items-center gap-2">
+                <select 
+                  value={fontClass}
+                  onChange={(e) => setFontClass(e.target.value)}
+                  className="bg-transparent text-zinc-300 text-[11px] py-1 rounded-md border-none focus:outline-none focus:ring-0 cursor-pointer hover:text-white transition-colors"
+                >
+                  {FONTS.map(font => (
+                    <option key={font.name} value={font.class} className="bg-zinc-900">{font.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Sound Toggle */}
+              <button 
+                type="button"
+                onClick={toggleSound}
+                className={`p-1 rounded-md transition-colors ${soundEnabled ? 'text-zinc-300 hover:text-white' : 'text-zinc-600 hover:text-zinc-400'}`}
+                title={soundEnabled ? "Mute Sound" : "Enable Sound"}
+              >
+                {soundEnabled ? <Volume2 size={14} /> : <VolumeX size={14} />}
+              </button>
+            </div>
+
+            <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+              {/* Colors */}
+              <div className="flex gap-1">
                 {COLORS.map(c => (
                   <button
                     key={c.name}
                     type="button"
                     onClick={() => insertColor(c.emoji)}
-                    className="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-lg flex items-center justify-center hover:scale-110 transition-transform bg-black/40 border border-zinc-700/50 text-lg sm:text-xl shadow-sm"
+                    className="w-6 h-6 sm:w-7 sm:h-7 shrink-0 rounded flex items-center justify-center hover:scale-110 transition-transform bg-zinc-800/50 border border-zinc-700/30 text-xs sm:text-sm"
                     title={c.name}
                   >
                     {c.emoji}
                   </button>
                 ))}
               </div>
-            </div>
 
-            <button 
-              type="submit"
-              className="w-full sm:w-auto bg-white text-black px-8 py-3 rounded-xl font-bold hover:bg-zinc-200 transition-colors uppercase tracking-wider text-sm shadow-[0_0_15px_rgba(255,255,255,0.1)] shrink-0"
-            >
-              Update Board
-            </button>
+              {/* Submit Button */}
+              <button 
+                type="submit"
+                className="bg-white/10 hover:bg-white/20 text-white px-4 py-1.5 rounded-lg text-xs font-medium transition-colors tracking-wide shrink-0 border border-white/5"
+              >
+                Update
+              </button>
+            </div>
           </div>
         </form>
       </motion.div>
