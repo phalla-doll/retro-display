@@ -55,9 +55,12 @@ function formatMessage(input: string): string {
 }
 
 const FONTS = [
-  { name: 'Inter', class: 'font-[family-name:var(--font-inter)]' },
-  { name: 'Geist Mono', class: 'font-[family-name:var(--font-geist-mono)]' },
-  { name: 'Space Mono', class: 'font-[family-name:var(--font-space-mono)]' },
+  { name: 'Inter Regular', class: 'font-[family-name:var(--font-inter)] font-normal' },
+  { name: 'Inter Bold', class: 'font-[family-name:var(--font-inter)] font-bold' },
+  { name: 'Geist Mono Regular', class: 'font-[family-name:var(--font-geist-mono)] font-normal' },
+  { name: 'Geist Mono Bold', class: 'font-[family-name:var(--font-geist-mono)] font-bold' },
+  { name: 'Space Mono Regular', class: 'font-[family-name:var(--font-space-mono)] font-normal' },
+  { name: 'Space Mono Bold', class: 'font-[family-name:var(--font-space-mono)] font-bold' },
 ];
 
 export default function Home() {
@@ -66,7 +69,7 @@ export default function Home() {
   const [showControls, setShowControls] = useState(true);
   const [boardTheme, setBoardTheme] = useState<BoardTheme>('dark-grey');
   const [backgroundTheme, setBackgroundTheme] = useState<BackgroundTheme>('dark-grey');
-  const [fontClass, setFontClass] = useState(FONTS[0].class);
+  const [fontClass, setFontClass] = useState(FONTS[1].class); // Default to Inter Bold
   const [soundEnabled, setSoundEnabled] = useState(false);
   const [animatedBackground, setAnimatedBackground] = useState(true);
   const hideTimeout = useRef<NodeJS.Timeout | null>(null);

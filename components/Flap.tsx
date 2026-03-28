@@ -13,7 +13,7 @@ interface HalfPieceProps {
   fontClass?: string;
 }
 
-function HalfPiece({ char, colors, position, isFlipping, speed, fontClass = 'font-sans' }: HalfPieceProps) {
+function HalfPiece({ char, colors, position, isFlipping, speed, fontClass = 'font-sans font-bold' }: HalfPieceProps) {
   const isTop = position === 'top';
   
   let animationStyle: any = {};
@@ -48,7 +48,7 @@ function HalfPiece({ char, colors, position, isFlipping, speed, fontClass = 'fon
       }}
     >
       {!colors.isColor && (
-        <span className={`leading-none font-bold ${fontClass} text-[52px] ${isTop ? 'translate-y-[50%]' : '-translate-y-[50%]'}`}>
+        <span className={`leading-none ${fontClass} text-[52px] ${isTop ? 'translate-y-[50%]' : '-translate-y-[50%]'}`}>
           {char}
         </span>
       )}
@@ -56,7 +56,7 @@ function HalfPiece({ char, colors, position, isFlipping, speed, fontClass = 'fon
   );
 }
 
-export function Flap({ targetChar, fontClass = 'font-sans' }: { targetChar: string, fontClass?: string }) {
+export function Flap({ targetChar, fontClass = 'font-sans font-bold' }: { targetChar: string, fontClass?: string }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipping, setIsFlipping] = useState(false);
   const [speed] = useState(() => 60 + Math.random() * 40); // 60-100ms per flap
