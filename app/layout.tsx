@@ -14,6 +14,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://retro-board.manthaa.dev/'),
   title: 'Retro Split-Flap Display',
   description: 'Turn your screen into a retro airport terminal split-flap display. Customize messages, colors, and textures.',
   keywords: ['split flap', 'vestaboard', 'retro display', 'airport terminal', 'message board'],
