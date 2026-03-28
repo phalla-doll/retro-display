@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { motion } from 'motion/react';
-import { Volume2, VolumeX, Sparkles } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+import { Volume2, VolumeX, Sparkles, ListOrdered } from 'lucide-react';
 import { Vestaboard, type BoardTheme, type BackgroundTheme } from '@/components/Vestaboard';
+import { PlaylistDialog, type PlaylistItem, type LoopSettings } from '@/components/PlaylistDialog';
 import { soundEngine } from '@/lib/audio';
 
 const COLORS = [
@@ -72,8 +73,56 @@ export default function Home() {
   const [fontClass, setFontClass] = useState(FONTS[1].class); // Default to Inter Bold
   const [soundEnabled, setSoundEnabled] = useState(false);
   const [animatedBackground, setAnimatedBackground] = useState(true);
+  
+  // Playlist State
+  const [playlist, setPlaylist] = useState<PlaylistItem[]>([]);
+  const [loopSettings, setLoopSettings] = useState<LoopSettings>({ enabled: false, interval: 10 });
+  const [isPlaylistOpen, setIsPlaylistOpen] = useState(false);
+  const [currentPlayIndex, setCurrentPlayIndex] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
+
   const hideTimeout = useRef<NodeJS.Timeout | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Load from local storage
+  useEffect(() => {
+    const savedPlaylist = localStorage.getItem('vestaboard_playlist');
+    const savedSettings = localStorage.getItem('vestaboard_loop_settings');
+    if (savedPlaylist) setPlaylist(JSON.parse(savedPlaylist));
+    if (savedSettings) setLoopSettings(JSON.parse(savedSettings));
+    setIsLoaded(true);
+  }, []);
+
+  // Save to local storage
+  useEffect(() => {
+    if (!isLoaded) return;
+    localStorage.setItem('vestaboard_playlist', JSON.stringify(playlist));
+    localStorage.setItem('vestaboard_loop_settings', JSON.stringify(loopSettings));
+  }, [playlist, loopSettings, isLoaded]);
+
+  // Loop logic
+  useEffect(() => {
+    if (!loopSettings.enabled || playlist.length === 0) return;
+    
+    const timer = setInterval(() => {
+      setCurrentPlayIndex((prev) => {
+        const nextIndex = (prev + 1) % playlist.length;
+        setMessage(formatMessage(playlist[nextIndex].text));
+        return nextIndex;
+      });
+    }, loopSettings.interval * 1000);
+
+    return () => clearInterval(timer);
+  }, [loopSettings.enabled, loopSettings.interval, playlist]);
+
+  // Initial trigger when enabled
+  useEffect(() => {
+    if (loopSettings.enabled && playlist.length > 0) {
+      const validIndex = currentPlayIndex >= playlist.length ? 0 : currentPlayIndex;
+      if (validIndex !== currentPlayIndex) setCurrentPlayIndex(validIndex);
+      setMessage(formatMessage(playlist[validIndex].text));
+    }
+  }, [loopSettings.enabled]); // Only run when enabled toggles
 
   const toggleSound = () => {
     const newState = !soundEnabled;
@@ -166,21 +215,37 @@ export default function Home() {
           </div>
           
           {/* Colors Row */}
-          <div className="flex items-center gap-3 pt-2 border-t border-zinc-800/40">
-            <span className="text-[10px] text-zinc-500 uppercase tracking-wider font-semibold">Colors</span>
-            <div className="flex gap-1.5 overflow-x-auto no-scrollbar pb-1">
-              {COLORS.map(c => (
-                <button
-                  key={c.name}
-                  type="button"
-                  onClick={() => insertColor(c.emoji)}
-                  className="w-7 h-7 sm:w-8 sm:h-8 shrink-0 rounded flex items-center justify-center hover:scale-110 transition-transform bg-zinc-800/50 border border-zinc-700/30 text-sm sm:text-base"
-                  title={c.name}
-                >
-                  {c.emoji}
-                </button>
-              ))}
+          <div className="flex items-center justify-between pt-2 border-t border-zinc-800/40">
+            <div className="flex items-center gap-3 overflow-hidden">
+              <span className="text-[10px] text-zinc-500 uppercase tracking-wider font-semibold shrink-0">Colors</span>
+              <div className="flex gap-1.5 overflow-x-auto no-scrollbar pb-1">
+                {COLORS.map(c => (
+                  <button
+                    key={c.name}
+                    type="button"
+                    onClick={() => insertColor(c.emoji)}
+                    className="w-7 h-7 sm:w-8 sm:h-8 shrink-0 rounded flex items-center justify-center hover:scale-110 transition-transform bg-zinc-800/50 border border-zinc-700/30 text-sm sm:text-base"
+                    title={c.name}
+                  >
+                    {c.emoji}
+                  </button>
+                ))}
+              </div>
             </div>
+
+            <button
+              type="button"
+              onClick={() => setIsPlaylistOpen(true)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors border shrink-0 ml-2 ${
+                loopSettings.enabled 
+                  ? 'bg-white/10 text-white border-white/20 shadow-[0_0_10px_rgba(255,255,255,0.1)]' 
+                  : 'bg-transparent text-zinc-400 border-zinc-800 hover:bg-zinc-900 hover:text-zinc-200'
+              }`}
+            >
+              <ListOrdered size={14} />
+              <span className="hidden sm:inline">Playlist</span>
+              {loopSettings.enabled && <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse ml-1"></span>}
+            </button>
           </div>
 
           {/* Controls Row */}
@@ -251,6 +316,19 @@ export default function Home() {
           </div>
         </form>
       </motion.div>
+
+      <AnimatePresence>
+        {isPlaylistOpen && (
+          <PlaylistDialog
+            onClose={() => setIsPlaylistOpen(false)}
+            playlist={playlist}
+            setPlaylist={setPlaylist}
+            loopSettings={loopSettings}
+            setLoopSettings={setLoopSettings}
+            currentInput={inputValue}
+          />
+        )}
+      </AnimatePresence>
     </main>
   );
 }
