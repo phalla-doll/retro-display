@@ -165,6 +165,25 @@ export default function Home() {
             </div>
           </div>
           
+          {/* Colors Row */}
+          <div className="flex items-center gap-3 pt-2 border-t border-zinc-800/40">
+            <span className="text-[10px] text-zinc-500 uppercase tracking-wider font-semibold">Colors</span>
+            <div className="flex gap-1.5 overflow-x-auto no-scrollbar pb-1">
+              {COLORS.map(c => (
+                <button
+                  key={c.name}
+                  type="button"
+                  onClick={() => insertColor(c.emoji)}
+                  className="w-7 h-7 sm:w-8 sm:h-8 shrink-0 rounded flex items-center justify-center hover:scale-110 transition-transform bg-zinc-800/50 border border-zinc-700/30 text-sm sm:text-base"
+                  title={c.name}
+                >
+                  {c.emoji}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Controls Row */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-2 border-t border-zinc-800/40">
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
               {/* Theme Controls */}
@@ -220,28 +239,13 @@ export default function Home() {
               </button>
             </div>
 
-            <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
-              {/* Colors */}
-              <div className="flex gap-1">
-                {COLORS.map(c => (
-                  <button
-                    key={c.name}
-                    type="button"
-                    onClick={() => insertColor(c.emoji)}
-                    className="w-6 h-6 sm:w-7 sm:h-7 shrink-0 rounded flex items-center justify-center hover:scale-110 transition-transform bg-zinc-800/50 border border-zinc-700/30 text-xs sm:text-sm"
-                    title={c.name}
-                  >
-                    {c.emoji}
-                  </button>
-                ))}
-              </div>
-
+            <div className="flex items-center justify-end w-full sm:w-auto mt-2 sm:mt-0">
               {/* Submit Button */}
               <button 
                 type="submit"
-                className="bg-white/10 hover:bg-white/20 text-white px-4 py-1.5 rounded-lg text-xs font-medium transition-colors tracking-wide shrink-0 border border-white/5"
+                className="bg-white/10 hover:bg-white/20 text-white px-6 py-1.5 rounded-lg text-xs font-medium transition-colors tracking-wide shrink-0 border border-white/5 w-full sm:w-auto"
               >
-                Update
+                Update Board
               </button>
             </div>
           </div>
